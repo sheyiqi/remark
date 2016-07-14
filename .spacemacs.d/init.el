@@ -220,7 +220,7 @@ values."
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 90
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
@@ -275,7 +275,25 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (setq-default
+   default-tab-width 4
+   require-final-newline t
+   show-trailing-whitespace t
+   )
+  (defun alzuse/no-trailing-whitespace ()
+    "Turn off display of trailing whitespace in this buffer."
+    (setq show-trailing-whitespace nil))
+
+  ;; But don't show trailing whitespace in SQLi, inf-ruby etc.
+  (dolist (hook '(special-mode-hook
+                  eww-mode-hook
+                  term-mode-hook
+                  comint-mode-hook
+                  compilation-mode-hook
+                  minibuffer-setup-hook))
+    (add-hook hook #'alzuse/no-trailing-whitespace))
   (menu-bar-mode)
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

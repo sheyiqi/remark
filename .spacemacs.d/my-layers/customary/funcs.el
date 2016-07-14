@@ -30,6 +30,32 @@
   (remove-hook 'isearch-mode-end-hook 'customary/isearch-word-end-hook)
   (setq customary/isearch-word ""))
 
+
+;;----------------------------------------------------------------------------
+;; search current region
+;;----------------------------------------------------------------------------
+(defvar customary/isearch-region "")
+(defun customary/isearch-region-forward ()
+  "isearch region if mark is active"
+  (interactive)
+  (when mark-active
+    (let ((beg (region-beginning))
+          (end (region-end)))
+      (setq customary/isearch-region (filter-buffer-substring beg end nil))
+      (deactivate-mark)
+      (when (> (length customary/isearch-region) 0)
+        (goto-char beg)
+        (isearch-update-ring customary/isearch-region t)
+        (add-hook 'isearch-mode-end-hook 'customary/isearch-region-end-hook)
+        (isearch-mode t t)          ;hack isearch-forward
+        (isearch-repeat 'forward)
+        (message "%s" customary/isearch-region)))))
+
+(defun customary/isearch-region-end-hook ()
+  (remove-hook 'isearch-mode-end-hook 'customary/isearch-region-end-hook)
+  (setq customary/isearch-region ""))
+
+
 ;;----------------------------------------------------------------------------
 ;; goto char like vim 'f'
 ;;----------------------------------------------------------------------------
@@ -43,3 +69,13 @@
                      char)
     (search-forward (string char) nil nil n))
   (setq unread-command-events (list last-input-event)))
+
+
+;;----------------------------------------------------------------------------
+;; Newline behaviour
+;;----------------------------------------------------------------------------
+(defun customary/newline-at-end-of-line ()
+  "Move to end of line, enter a newline, and reindent."
+  (interactive)
+  (move-end-of-line 1)
+  (newline-and-indent))

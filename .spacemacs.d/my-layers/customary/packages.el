@@ -30,7 +30,9 @@
 ;;; Code:
 
 (defconst customary-packages
-  '()
+  '(
+    whole-line-or-region
+    )
   "The list of Lisp packages required by the customary layer.
 
 Each entry is either:
@@ -58,7 +60,15 @@ Each entry is either:
       - A list beginning with the symbol `recipe' is a melpa
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
-
+(defun customary/init-whole-line-or-region()
+  (use-package whole-line-or-region
+    :defer t
+    :diminish whole-line-or-region-mode
+    :init
+    (progn
+      (whole-line-or-region-mode t)
+      (make-variable-buffer-local 'whole-line-or-region-mode)
+      )))
 
 
 ;;; packages.el ends here
