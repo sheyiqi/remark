@@ -1,0 +1,39 @@
+[user]
+    name = Adam Zhang
+    email = xx@yy.zz
+[core]
+    editor = vim
+    whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+[alias]
+    co = checkout
+    lo = log -p
+    ci = commit
+    st = status
+    br = branch
+#    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    hist = log --color --graph --pretty=format:'%Cred%h%Creset %C(cyan)%ad%Creset | %C(green)%s%C(yellow)%d%Creset %C(bold blue)[%an]%Creset' --graph --date=short
+    epic = log --color --graph --pretty=format:'%Cred%h%Creset %C(cyan)(%cr)%Creset | %C(green)%s%C(yellow)%d%Creset %C(bold blue)[%an]%Creset' --abbrev-commit --
+    type = cat-file -t
+    dump = cat-file -p
+    ls = ls-files
+    ign = ls-files -o -i --exclude-standard
+[color]
+    ui = auto
+[color "branch"]
+    current = blue reverse
+    local = blue
+    remote = green
+[color "diff"]
+    meta = blue bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+[color "status"]
+    added = blue
+    changed = green
+    untracked = cyan
+[url "git://anongit.kde.org/"]
+	insteadOf = kde:
+[url "git@git.kde.org:"]
+	pushInsteadOf = kde:
