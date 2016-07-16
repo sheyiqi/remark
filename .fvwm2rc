@@ -1,0 +1,484 @@
+# set the shell
+#ExecUseShell /bin/csh
+# set path icons searched
+ImagePath $[HOME]/.fvwm/icons/:/usr/share/pixmaps
+
+EdgeScroll 0 0
+# when moving windows over two screens, 150 resistance pixels
+EdgeResistance 150
+#EdgeResistance 10000 20
+IgnoreModifiers L25
+# always show a geometrywindow at topleft
+HideGeometryWindow Never
+
+# 2x2 pages
+DeskTopSize 2x2
+
+Style * EdgeMoveDelay 100
+Style * EdgeResizeDelay 100
+Style * SnapAttraction 12 All
+#Style * SnapGrid 4 4
+#Style * ResizeHintOverride
+Style * DecorateTransient
+Style * MwmFunctions, MwmDecor, MwmButtons, MwmBorder
+#Style * ClickToFocus, MouseFocusClickRaises 
+Style * SloppyFocus, MouseFocusClickRaises 
+#Style * SmartPlacement, RandomPlacement
+Style * BorderWidth 3, HandleWidth 3
+Style * ForeColor Black, BackColor LightSteelBlue
+Style * HilightFore White, HilightBack #b24d7a
+Style * Font "shadow=1:xft:Wenquanyi Bitmap Song:weight=Bold:size=10:antialias=True"
+#Style * Font "xft:Bitstream Vera Sans:size=10:antialias=True"
+Style * IconBox 60x1200+0+0, IconFill left top 
+Style * IconSize 48 48
+IconFont "xft:Wenquanyi Bitmap Song:size=10:antialias=True"
+#IconFont "xft:Bitstream Vera Sans:size=10:antialias=True"
+
+Style "xterm"   Icon apps/terminal.xpm, IconOverride
+Style "urxvt"   Icon apps/terminal.xpm, IconOverride
+Style "emacs"   Icon apps/emacs.xpm, IconOverride
+Style "Gimp"    Icon apps/gimp.xpm, IconOverride  RaiseTransient LowerTransient StackTransientParent
+Style "Fvwm*"   NoTitle, Sticky, WindowListSkip, CirculateSkipIcon, BorderWidth 1, HandleWidth 1
+Style "Display" RaiseTransient LowerTransient StackTransientParent
+Style "Designer"    RaiseTransient LowerTransient StackTransientParent
+
+MenuStyle * fvwm
+MenuStyle * Font "xft:Wenquanyi Bitmap Song:weight=Bold:size=10:antialias=True"
+#MenuStyle * Font "shadow=0:xft:Bitstream Vera Sans:size=10:antialias=True"
+MenuStyle * Foreground black, Background LightSteelBlue
+MenuStyle * PopupOffset +0 100, PopupDelay 500
+MenuStyle * ActiveFore White, HilightBack #b24d7a
+
+# title with CDE-like style
+TitleStyle Height 22
+TitleStyle -- Raised
+ButtonStyle All -- Raised
+ButtonStyle 1 - MwmDecorMenu
+ButtonStyle 2 - MwmDecorMax
+ButtonStyle 4 - MwmDecorMin
+
+##### Key/Mouse Bindings #####
+
+Key Super_L A  A   Menu StartMenu Nop
+
+Key Tab    A   M   -
+Key Tab    A   M   WindowList Root c c NoDeskSort
+           
+Key F1     A   C   Exec exec urxvtc
+Key F1     A   M   Exec exec emacs
+#Key F1     A   C   Exec exec urxvt -geometry 68x53
+#Key F1     A   M   Exec exec emacs -geometry 66x53
+Key F2     A   M   Module FvwmForm FvwmForm-Run
+
+Key F4     W   M   Close
+           
+Key F9     A   A   PrevWindow
+Key F9     A   M   GotoDesk -1 0 5
+Key F9     A   C   GotoPageCCW
+Key F9     A   S   Scroll -3 0
+
+Key F10    A   A   NextWindow
+Key F10    A   M   GotoDesk 1 0 5
+Key F10    A   C   GotoPageCW
+Key F10    A   S   Scroll +3 0
+           
+Key F11    W   A   Maximize 100 100 
+Key F11    W   C   Maximize 100 100
+Key F11    W   M   Maximize 200 100 
+Key F11    W   S   Maximize 100 0
+
+#Key Left   A   S   CursorMove -17p 0
+#Key Right  A   S   CursorMove +17p 0
+#Key Up     A   S   CursorMove 0 -17p
+#Key Down   A   S   CursorMove 0 +17p
+              
+#Key Left   A   M   Scroll -3 0
+#Key Right  A   M   Scroll +3 0
+#Key Up     A   M   Scroll 0 -3
+#Key Down   A   M   Scroll 0 +3
+
+#Key Left   A   C   Scroll -1p 0p
+#Key Right  A   C   Scroll +1p 0p
+#Key Up     A   C   Scroll 0p -1p
+#Key Down   A   C   Scroll 0p +1p
+              
+#Key Left   A   M   Scroll -3 0
+#Key Right  A   M   Scroll +3 0
+#Key Up     A   M   Scroll 0 -3
+#Key Down   A   M   Scroll 0 +3
+
+Key Print  A   M   Exec import -window root ~/tmp/import_shot/`date +r_%Y%m%d_%T`.png
+Key Print  A   C   Exec import ~/tmp/import_shot/`date +w_%Y%m%d_%T`.png
+
+Key F12    A   M   Exec xscreensaver-command -lock
+
+Mouse 1    R   A   Menu StartMenu Nop
+Mouse 2    R   A   Menu Window-Ops Nop
+Mouse 3    R   A   WindowList
+           
+Mouse 1    1   A   Menu Window-Ops Close
+Mouse 1    2   A   Maximize 100 100
+Mouse 2    2   A   Maximize 200 100
+Mouse 3    2   A   Maximize 100 100
+Mouse 1    4   A   Iconify
+           
+Mouse 1    F   A   Resize-or-Raise
+Mouse 1    I   A   Move-or-Iconify 
+Mouse 2    I   A   Iconify
+Mouse 3    I   A   Menu Window-Ops Nop
+           
+Mouse 1    T   A   Move-or-Raise
+Mouse 1    S   A   Resize
+
+DestroyFunc Move-or-Raise
+AddToFunc Move-or-Raise
++   I Raise
++   M Move
++   D WindowShade
+
+DestroyFunc Move-or-Iconify 
+AddToFunc   Move-or-Iconify  
++   I Raise
++   M Move
++   D Iconify
+
+DestroyFunc Resize-or-Raise 
+AddToFunc Resize-or-Raise 
++   M Resize
++   M Raise
++   C Raise
++   D RaiseLower
+
+DestroyFunc GotoPageCW
+AddToFunc GotoPageCW
++   I PipeRead 'if [ $[page.nx] = 0 -a $[page.ny] = 0 ]; then \
+                echo  GotoPage 1 0; \
+               elif [ $[page.nx] = 1 -a $[page.ny] = 0 ]; then \
+                echo  GotoPage 1 1; \
+               elif [ $[page.nx] = 1 -a $[page.ny] = 1 ]; then \
+                echo  GotoPage 0 1; \
+               elif [ $[page.nx] = 0 -a $[page.ny] = 1 ]; then \
+                echo  GotoPage 0 0; \
+               fi;'
+
+DestroyFunc GotoPageCCW
+AddToFunc GotoPageCCW
++   I PipeRead 'if [ $[page.nx] = 0 -a $[page.ny] = 0 ]; then \
+                echo  GotoPage 0 1; \
+               elif [ $[page.nx] = 0 -a $[page.ny] = 1 ]; then \
+                echo  GotoPage 1 1; \
+               elif [ $[page.nx] = 1 -a $[page.ny] = 1 ]; then \
+                echo  GotoPage 1 0; \
+               elif [ $[page.nx] = 1 -a $[page.ny] = 0 ]; then \
+                echo  GotoPage 0 0; \
+               fi;'
+
+DestroyFunc NextWindow
+AddToFunc  NextWindow 
++   I Next (!Iconic CurrentPage AcceptsFocus !"FvwmForm*|FvwmButtons*") Focus
++   I Current Raise
+
+DestroyFunc PrevWindow
+AddToFunc  PrevWindow
++   I Prev (!Iconic CurrentPage AcceptsFocus !"FvwmForm*|FvwmButtons*") Focus
++   I Current Raise
+
+DestroyFunc StartFunction
+AddToFunc StartFunction
++   I Module FvwmButtons  FvwmButtonsBar
++   I Module FvwmAuto 1 -menter enter_handler
++   I Module FvwmBacker
+#+   I Module FvwmAnimate
+#+   I Exec exec xsetroot -mod 9 3 -fg \#053249 -bg \#110000
+#+   I Exec exec fvwm-root -r  ~/.fvwm/wl.png
+
+DestroyFunc InitFunction
+AddToFunc InitFunction
+#+   I Exec exec /usr/libexec/gnome-settings-daemon
++   I Exec exec urxvtd -q -o -f
++   I Exec exec xscreensaver -no-splash
++   I Exec exec fcitx
++   I Exec exec conky
+#+   I Exec exec gnome-panel
+
+DestroyFunc ExitFunction
+AddToFunc ExitFunction
++   I All (urxvtd) Close
++   I All (xscreensaver) Close
++   I All (fcitx) Close
++   I All (conky) Close
+#+   I All (conky) gnome-panel
+#+   I All (fvwm-root) Close
+#+   I All (/usr/libexec/gnome-settings-daemon) Close
+
+
+DestroyFunc URxvt2x2_0
+AddToFunc URxvt2x2_0
++   I Exec exec urxvtc -geometry 97x22+0+0
++   I Exec exec urxvtc -geometry 97x22+196+0
++   I Exec exec urxvtc -geometry 97x22+0+507
++   I Exec exec urxvtc -geometry 97x22+196+507
+
+DestroyFunc URxvt2x2
+AddToFunc URxvt2x2
++   I Exec exec urxvtc -geometry 69x26+0+0     -fn "-misc-fixed-medium-r-normal--18-*-*-*-*-*-*-*, \
+            [codeset=gb2312]xft:SimHei:antialias=true:size=10"
++   I Exec exec urxvtc -geometry 69x26+636+0   -fn "-misc-fixed-medium-r-normal--18-*-*-*-*-*-*-*, \
+            [codeset=gb2312]xft:SimHei:antialias=true:size=10"
++   I Exec exec urxvtc -geometry 69x27+0+507   -fn "-misc-fixed-medium-r-normal--18-*-*-*-*-*-*-*, \
+            [codeset=gb2312]xft:SimHei:antialias=true:size=10"
++   I Exec exec urxvtc -geometry 69x27+636+507 -fn "-misc-fixed-medium-r-normal--18-*-*-*-*-*-*-*, \
+            [codeset=gb2312]xft:SimHei:antialias=true:size=10"
+
+
+DestroyFunc Xterm2x2
+AddToFunc Xterm2x2
++   I Exec exec xterm -cr red -bg white -fg black -geometry 68x26+0+0
++   I Exec exec xterm -cr red -bg white -fg black -geometry 68x26+636+0
++   I Exec exec xterm -cr red -bg white -fg black -geometry 68x27+0+507
++   I Exec exec xterm -cr red -bg white -fg black -geometry 68x27+636+507
+
+############## Auto Hiding ####################
+
+AddToFunc autohide
++   I ThisWindow ($0) Deschedule $[w.id]
++   I TestRc (!Match) Deschedule -$[w.id]
++   I ThisWindow ($0) KeepRc ThisWindow (shaded) \
+      autohide_show $1 $3
++   I TestRc (!Match) All ($0, !shaded) autohide_hide $2 $3
+
+AddToFunc autohide_show
++   I Schedule $0 -$[w.id] WindowShade $1 off
++   I Schedule $0 -$[w.id] Deschedule $[w.id]
++   I Schedule $0 -$[w.id] Deschedule -$[w.id]
+
+AddToFunc autohide_hide
++   I Schedule $0 $[w.id] WindowShade $1 on
++   I Schedule $0 $[w.id] Deschedule $[w.id]
++   I Schedule $0 $[w.id] Deschedule -$[w.id]
+
+AddToFunc enter_handler
++ I autohide FvwmButtonsBar 50 100 S
+#            ^              ^  ^   ^
+#            |              |  |   |__  Shade direction (optional)
+#            |              |  |______  Hide delay
+#            |              |_________  Show delay
+#            |________________________  Unique window name/resource
+
+############## End Auto Hiding ####################
+
+DestroyMenu Window-Ops
+AddToMenu Window-Ops
+#+   " Minimize " Iconify 1
++   " Maximize "      Maximize 100 100
++   " Maximize-All "  Maximize 100 100
++   " Shade"          WindowShade
++   "" Nop
++   " Stick "         Stick
++   " Move to Desk"   Popup SendToDesk
++   " Ident"          FvwmIdent
++   "" Nop
++   " Close"          Close
++   " Destroy "       Destroy
++   " Delete "        Delete
+
+DestroyMenu SendToDesk
+AddToMenu SendToDesk
++   "  Send to Desk 0  " MoveToDesk 0 0
++   "  Send to Desk 1  " MoveToDesk 0 1
++   "  Send to Desk 2  " MoveToDesk 0 2
++   "  Send to Desk 3  " MoveToDesk 0 3
++   "  Send to Desk 4  " MoveToDesk 0 4
++   "  Send to Desk 5  " MoveToDesk 0 5
+#+   "  Send to Desk 6  " MoveToDesk 0 6
+#+   "  Send to Desk 7  " MoveToDesk 0 7
+
+DestroyMenu StartMenu
+AddToMenu StartMenu
++   "  = Fvwm =  " Title
++   "  Emacs23  " Exec exec emacs
+#+   "  XTerm  " Exec exec xterm -bg black -fg white
++   "  URxvt  " Exec exec urxvtc
++   "  Run...  " Module FvwmForm FvwmForm-Run
++   "" Nop
++   "  Applications  " Popup "Applications"
++   "  Programming  " Popup "Programming"
+#+   "  Wine " Popup "Wine"
++   "  Utilities  " Popup "Utilities"
++   ""  Nop
++   "  Quit..  " Popup "WM-Actions"
+
+DestroyMenu Programming
+AddToMenu Programming
++   "  = Programming =  " Title
++   "  Emacs23  " Exec exec emacs
++   "  Eclipse  " Exec exec eclipse
++   "  Qt4 Designer" Exec exec designer
++   "  Qt4 Assistant" Exec exec assistant
+
+
+DestroyMenu Applications
+AddToMenu Applications
++   "  = Applications =  " Title
++   "  Emacs (naked)  " Exec exec emacs
++   "  XTerm (2x2)  " Xterm2x2
+#+   "  URxvt(normal)  " Exec exec urxvtc
++   "  URxvt(2x2) " URxvt2x2
++   "  URxvt(2x2 Big) " URxvt2x2_0
++   "  Rox-filer  " Exec exec /usr/share/.sysv/local/lib/ROX-Filer/AppRun
++   "  FireFox  " Exec exec firefox
++   "  ThunderBird" Exec exec thunderbird
+#+   "  KMail " Exec exec kmail
+#+   "  Evolution " Exec exec evolution
++   "  Stardict  " Exec exec stardict
++   "  Songbird  " Exec exec ~/export/local/opt/Songbird/songbird
++   "  GIMP 图像处理 " Exec exec gimp 
++   "  Adobe Reader 7.0  " Exec exec acroread
++   "  OpenOffice.org  " Exec exec soffice
++   "  Ctrix Client  "  Exec exec /usr/local/ICAClient/wfcmgr
++   "  RDesktop shtc003"  Exec exec rdesktop -g 1272x960 172.29.200.3 -u adamzhang -p goodgood -d atcrd
+
+
+DestroyMenu Wine
+AddToMenu Wine
++   "  Source Insight 3.5"  Exec exec /home/engineer/azhang/.cxoffice/Unsupported-2/desktopdata/cxmenu/StartMenu.C^5E3A^5Fwindows^5Fprofiles^5FAll^2BUsers^5FStart^2BMenu/Programs/Source+Insight+3/Source+Insight+3.5
++   "  Microsoft Office Word 2003 " Exec exec /home/engineer/azhang/.cxoffice/win2000/desktopdata/cxmenu/StartMenu.C^5E3A^5Fwindows^5Fprofiles^5Fcrossover^5FStart^2BMenu/Programs/Microsoft+Office/Microsoft+Office+Word+2003
++   "  Microsoft Office PowerPoint 2003 " Exec exec /home/engineer/azhang/.cxoffice/win2000/desktopdata/cxmenu/StartMenu.C^5E3A^5Fwindows^5Fprofiles^5Fcrossover^5FStart^2BMenu/Programs/Microsoft+Office/Microsoft+Office+PowerPoint+2003
++   "  Microsoft Office Execl 2003 " Exec exec /home/engineer/azhang/.cxoffice/win2000/desktopdata/cxmenu/StartMenu.C^5E3A^5Fwindows^5Fprofiles^5Fcrossover^5FStart^2BMenu/Programs/Microsoft+Office/Microsoft+Office+Excel+2003
+
++   "  Microsoft Office Visio 2003 " Exec exec /home/engineer/azhang/.cxoffice/win2000/desktopdata/cxmenu/StartMenu.C^5E3A^5Fwindows^5Fprofiles^5Fcrossover^5FStart^2BMenu/Programs/Microsoft+Office/Microsoft+Office+Visio+2003
++   "  CrossOver Install Wizard " Exec exec /usr/share/.sysv/local/lib/crossover/bin/cxinstallwizard
+
+DestroyMenu Utilities
+AddToMenu Utilities
++   "  = Utilities =  " Title
++   "  Xkill  " Exec exec xkill
++   "  Calculator  " Exec exec xcalc
++   "  Font Selector  " Exec exec xfontsel
++   "  Xmag  " Exec exec xmag
++   "  Capture  " Exec exec import ~/tmp/import_shot/`date +w_%Y%m%d_%T`.png
++   "  FvwmConsole  "  Module FvwmConsole -terminal xterm -geometry 45x5-0+0 \
+	                          -bg gold -fg midnightblue \
+	                          -fn "-*-fixed-medium-r-*-*-14-*-*-*-*-*-*-*"
+
+DestroyMenu WM-Actions
+AddToMenu WM-Actions
++   " = WM-Actions= " Title
++   " Refresh " Refresh
++   " Lock " Exec exec xscreensaver-command -lock
++   " Restart Fvwm " Restart
++   "" Nop
++   " Quit " Quit
+#+   " Logout " Exec exec ps aux | grep azhang | awk '{print $2}' |xargs kill -9
+
+
+# FvwmBacker #
+DestroyModuleConfig FvwmBacker*
+*FvwmBacker: Command (Desk 0, Page * *) Exec exec xsetroot -mod 9 3 -fg \#053249 -bg \#110000
+*FvwmBacker: Command (Desk 1, Page * *) Exec exec xsetroot -mod 2 3 -fg \#213241 -bg \#001111
+*FvwmBacker: Command (Desk 2, Page * *) Exec exec xsetroot -mod 4 4 -fg \#222222 -bg black
+*FvwmBacker: Command (Desk 3, Page * *) -solid DarkSlateGray
+*FvwmBacker: Command (Desk 4, Page * *) -solid SteelBlue
+*FvwmBacker: Command (Desk 4, Page * *) -solid DarkSlateBlue
+*FvwmBacker: Command (Desk 5, Page * *) -solid gray24
+*FvwmBacker: Command (Desk 6, Page * *) -solid SeaGreen4
+*FvwmBacker: Command (Desk 7, Page * *) -solid SteelBlue
+
+# FvwmPagerCur #
+Style "FvwmPagerCur" NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip , NeverFocus
+DestroyModuleConfig FvwmPagerCur*
+*FvwmPagerCur: UseSkipList
+*FvwmPagerCur: Back #908090
+*FvwmPagerCur: Fore White
+#*FvwmPagerCur: font "xft:Bitstream Vera Sans:size=10:antialias=True"
+*FvwmPagerCur: font none
+*FvwmPagerCur: Hilight #cab3ca
+*FvwmPagerCur: MiniIcons
+*FvwmPagerCur: Balloons       All
+*FvwmPagerCur: BalloonFore    Black
+*FvwmPagerCur: BalloonBack    Yellow
+*FvwmPagerCur: BalloonYOffset     +2
+*FvwmPagerCur: BalloonBorderWidth 1
+*FvwmPagerCur: BalloonBorderColor #908090
+*FvwmPagerCur: BalloonFont "xft:Wenquanyi Bitmap Song:size=10:antialias=True"
+#*FvwmPagerCur: BalloonFont "xft:Bitstream Vera Sans:size=10:antialias=True"
+#*FvwmPagerCur: LabelsBelow
+#*FvwmPagerCur: Label 0 0
+#*FvwmPagerCur: Label 1 1
+#*FvwmPagerCur: Label 2 2
+#*FvwmPagerCur: Label 3 3
+#*FvwmPagerCur: Label 4 4
+#*FvwmPagerCur: Label 5 5
+#*FvwmPagerCur: Label 6 6
+#*FvwmPagerCur: Label 7 7
+*FvwmPagerCur: SmallFont "xft:Wenquanyi Bitmap Song:size=9:antialias=True"
+#*FvwmPagerCur: SmallFont "xft:Bitstream Vera Sans:size=9:antialias=True"
+
+########################## Icon Manager ####################################
+Style "FvwmIconMan" NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip, NeverFocus
+DestroyModuleConfig FvwmIconMan*
+*FvwmIconMan: NumManagers 1
+*FvwmIconMan: Resolution  screen
+*FvwmIconMan: Background  LightSteelBlue
+*FvwmIconMan: Foreground  black
+*FvwmIconMan: Font  "xft:SimSun:size=14:antialias=True"
+#*FvwmIconMan: Font  "xft:Bitstream Vera Sans:size=10:antialias=True"
+*FvwmIconMan: Title       ""
+*FvwmIconMan: Format      "%t"
+*FvwmIconMan: Action      Mouse   1 N SendCommand "Raise", SendCommand "Iconify"
+*FvwmIconMan: Action      Mouse   3 N SendCommand "Iconify 1"
+*FvwmIconMan: Action      Mouse   2 N SendCommand "FvwmIdent"
+*FvwmIconMan: FollowFocus true
+*FvwmIconMan: Sort        id
+*FvwmIconMan: PlainButton          down black LightSteelBlue
+*FvwmIconMan: SelectButton         down black LightSteelBlue
+*FvwmIconMan: FocusButton          down white #b24d7a
+*FvwmIconMan: FocusandselectButton down LightSteelBlue2 #b24d7a
+*FvwmIconMan: buttongeometry  300x32
+*FvwmIconMan: managergeometry 1x1
+
+Style "FvwmButtonsBar" NoTitle, NoHandles, Sticky, BorderWidth 0, HandleWidth 0, StaysOnTop, WindowListSkip, NeverFocus
+DestroyModuleConfig FvwmButtonsBar*
+*FvwmButtonsBar: Rows 1
+#*FvwmButtonsBar: Columns 1
+*FvwmButtonsBar: Geometry 1100x34+90-0
+#*FvwmButtonsBar: BoxSize fixed
+*FvwmButtonsBar: Font "xft:Wenquanyi Bitmap Song:size=10:antialias=True"
+#*FvwmButtonsBar: Font "xft:Bitstream Vera Sans:size=10:antialias=True"
+*FvwmButtonsBar: Back LightSteelBlue
+*FvwmButtonsBar: (12x1  Frame 1  Padding 1 1  Swallow "FvwmPagerCur" "FvwmPager FvwmPagerCur 0 5")
+*FvwmButtonsBar: (34x1  Frame 1  Padding 1 1  Swallow "FvwmIconMan" "Module FvwmIconMan")
+*FvwmButtonsBar: (3x1  Frame 1  Padding 1 1  Swallow(UseOld, NoHints, Respawn) "qclock" `Exec exec qclock -style CDE`, Action(Mouse 3) `WindowList`, Action(Mouse 1) `Menu StartMenu rectangle 0x198-0-0 +0 +0`, Action(Mouse 2) `Menu Window-Ops rectangle 1x198-0-0 +0 +0`)
+#*FvwmButtonsBar: (End)
+
+Style "FvwmForm-Run" Title
+Style "FvwmForm-Run" Icon apps/information.xpm
+DestroyModuleConfig FvwmForm-Run*
+*FvwmForm-Run: Fore black
+*FvwmForm-Run: Back LightSteelBlue
+*FvwmForm-Run: ItemFore black
+*FvwmForm-Run: ItemBack white
+*FvwmForm-Run: WarpPointer
+*FvwmForm-Run: Title "Run..."
+*FvwmForm-Run: Line left
+*FvwmForm-Run: Font  "xft:Wenquanyi Bitmap Song:size=10:antialias=True"
+*FvwmForm-Run: InputFont  "xft:Bitstream Vera Sans Mono:size=11:antialias=True"
+*FvwmForm-Run: ButtonFont "xft:Wenquanyi Bitmap Song:size=10:antialias=True"
+#*FvwmForm-Run: Font  "xft:Bitstream Vera Sans:size=10:antialias=True"
+#*FvwmForm-Run: InputFont  "xft:Bitstream Vera Sans Mono:size=11:antialias=True"
+#*FvwmForm-Run: ButtonFont "xft:Bitstream Vera Sans:size=10:antialias=True"
+*FvwmForm-Run: Text "           "
+*FvwmForm-Run: Line left
+*FvwmForm-Run: Text "CMD"
+*FvwmForm-Run: Input CMD 25 ""
+*FvwmForm-Run: Line left
+*FvwmForm-Run: Text "  "
+*FvwmForm-Run: Line expand
+*FvwmForm-Run: Text ""
+*FvwmForm-Run: Button quit "Run" ^M
+*FvwmForm-Run: Command Exec exec $(CMD) &
+*FvwmForm-Run: Text ""
+*FvwmForm-Run: Text ""
+*FvwmForm-Run: Button quit "Quit"
+*FvwmForm-Run: Command Nop
+

@@ -1,0 +1,127 @@
+Xft.dpi:                  108
+
+Xft.antialias: 1 
+Xft.hinting: 1 
+Xft.hintstyle: hintfull  
+
+!
+! X T E R M - Setting
+!
+!XTerm*utf8:               0
+XTerm*font:               -*-fixed-medium-r-normal-*-18-*-*-*-*-*-*-*
+XTerm*colorMode:          on
+XTerm*colorULMode:        on
+XTerm*colorBD:            lightyellow
+!XTerm*colorUL:            yellow
+XTerm*dynamicColors:      off
+XTerm*highlightSelection: true
+XTerm*background:         black
+XTerm*foreground:         white
+XTerm*cursorColor:        yellow
+XTerm*scrollBar:          true
+XTerm*saveLines:          1024
+
+!!colors
+!!black
+!XTerm*color0:             #000000
+!XTerm*color8:             #666666
+!!red                      
+!XTerm*color1:             #9e1828
+!XTerm*color9:             #cf6171
+!!green                    
+!XTerm*color2:             #aece92
+!XTerm*color10:            #c5f779
+!!yellow                   
+!XTerm*color3:             #968a38
+!XTerm*color11:            #fff796
+!!blue                     
+!XTerm*color4:             #414171
+!XTerm*color12:            #4186be
+XTerm*color4:             #3774ff
+XTerm*color12:            #4186be
+!magenta                  
+!XTerm*color5:             #96c359
+!XTerm*color13:            #cf9ebe
+!!cyan                     
+!XTerm*color6:             #418179
+!XTerm*color14:            #71bebe
+!!white                    
+!XTerm*color7:             #bebebe
+!XTerm*color15:            #ffffff 
+
+!
+! U R X V T - Setting
+!
+!URxvt*inheritPixmap:        true
+URxvt*reverseVideo:         false
+URxvt*shading:              0    !trans, 0=opaque    
+URxvt*fading:               10   !term unfocus      
+URxvt*saveLines:            8192 
+!URxvt*termName:             rxvt-unicode
+URxvt*preeditType:          Root
+!URxvt*perl-ext-common:      default,tabbed
+
+
+URxvt*scrollTtyOutput:      False
+URxvt*scrollTtyKeypress:    True
+URxvt*scrollWithBuffer:     True
+URxvt*scrollBar:            true
+URxvt*scrollBar_floating:   false
+URxvt*scrollBar_right:      false
+!URxvt*scrollstyle:          next
+URxvt*secondaryScroll:      true
+
+!URxvt*colorBD:              yellow
+!URxvt*colorUL:              green
+URxvt*background:           black
+URxvt*foreground:           white
+URxvt*cursorColor:          yellow
+URxvt*tintColor:            #dfdfdf
+URxvt*scrollColor:          gray15
+!URxvt*scrollColor:          #828282
+!URxvt*scrollColor:          LightSteelBlue4
+!
+
+!URxvt.font: -misc-fixed-medium-r-normal--18-*-*-*-*-*-*-*, \
+!            [codeset=gb2312]xft:WenQuanYi Bitmap Song:antialias=true:size=9
+URxvt*font: xft:Bitstream Vera Sans Mono:pixelsize=18, \
+            [codeset=gb2312]xft:SimHei:antialias=true:size=12
+
+!URxvt*font: xft:Monaco:pixelsize=11, \
+!            [codeset=gb2312]xft:WenQuanYi Bitmap Song:antialias=true:size=9
+
+
+!URxvt*keysym.Control-Shift: builtin:
+!URxvt*keysym.C-F8:          builtin:
+!URxvt*keysym.M-F8:          builtin:
+
+!!colors
+!!black
+!URxvt*color0:           #676767
+!URxvt*color8:           #757575
+!!red             
+!URxvt*color1:           #EA6868
+!URxvt*color9:           #FF7272
+!!green           
+!URxvt*color2:           #ABCB8D
+!URxvt*color10:          #AFD78A
+!!yellow          
+!URxvt*color3:           #E8AE5B
+!URxvt*color11:          #FFA75D
+!!blue            
+!URxvt*color4:           #71C5F4
+!URxvt*color12:          #67CDE9
+URxvt*color4:             #3774ff
+URxvt*color12:            #4186be
+!!magenta         
+!URxvt*color5:           #E2BAF1
+!URxvt*color13:          #ECAEE9
+!!cyan            
+!URxvt*color6:           #21F1EA
+!URxvt*color14:          #36FFFC
+!!white           
+!URxvt*color7:           #F1F1F1
+!URxvt*color15:          #FFFFFF
+
+Emacs.FontBackend:       xft
+
