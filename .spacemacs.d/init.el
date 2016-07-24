@@ -24,6 +24,7 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      auto-completion
+     semantic
      better-defaults
      emacs-lisp
      (colors :variables
@@ -48,7 +49,6 @@ values."
      (c-c++ :variables
             c-c++-enable-clang-support t)
      ipython-notebook
-     ;; markdown
      python
      shell-scripts
      ;; vimscripts
@@ -62,11 +62,15 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages
+   '(
+     evil-escape
+     evil-surround
+     )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
-   dotspacemacs-delete-orphan-packages t))
+   dotspacemacs-delete-orphan-packages nil))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -93,7 +97,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -116,23 +120,23 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         zenburn
                          spacemacs-dark
                          ;; spacemacs-light
                          ;; solarized-light
                          solarized-dark
-                         ;;leuven
+                         ;; leuven
                          monokai
-                         ;;zenburn
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Consolas"
-                               :size 13
+                               :size 14
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.0)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -280,6 +284,7 @@ you should place your code here."
    require-final-newline t
    show-trailing-whitespace t
    )
+
   (defun alzuse/no-trailing-whitespace ()
     "Turn off display of trailing whitespace in this buffer."
     (setq show-trailing-whitespace nil))
@@ -294,7 +299,14 @@ you should place your code here."
     (add-hook hook #'alzuse/no-trailing-whitespace))
   (menu-bar-mode)
 
-  )
+
+  ;; define the powerline seprator. Candidated ones are `alternate',
+  ;; `arrow', `arrow-fade', `bar', `box', `brace', `butt', `chamfer',
+  ;; `contour', `curve', `rounded', `roundstub', `slant', `wave',
+  ;; `zigzag`, `nil'
+  (setq powerline-default-separator 'arrow)
+
+  (spaceline-compile))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
