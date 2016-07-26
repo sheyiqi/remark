@@ -3,6 +3,8 @@
 /auto-save-list
 /.session
 /custom.el
+.emacs.d.normal/ac-comphist.dat
+.emacs.d.normal/elpa/
 *.elc
 CVS
 .svn
@@ -42,3 +44,4 @@ woman-cache/
 *.old
 anaconda-mode/
 *.eld
+bak/

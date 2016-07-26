@@ -43,6 +43,9 @@ filetype plugin on
 " Enable filetype indent
 filetype indent on
 
+if has("win32unix")
+    colo desert
+endif
 
 if &t_Co > 1 || has("gui_running")
     syntax enable
