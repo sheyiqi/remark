@@ -43,9 +43,6 @@ filetype plugin on
 " Enable filetype indent
 filetype indent on
 
-if has("win32unix")
-    colo desert
-endif
 
 if &t_Co > 1 || has("gui_running")
     syntax enable
@@ -59,7 +56,11 @@ if has('gui_running')
     highlight CursorLine guibg=#99ffee
     highlight Pmenu guibg=#cccccc gui=bold
 else
-    colo default
+    if has("win32unix")
+        colo desert
+    else
+        colo default
+    endif
 endif
 
 let mapleader = ","
