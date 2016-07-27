@@ -78,10 +78,10 @@
 
 ;; cleanup recent files
 (add-hook 'kill-emacs-hook #'(lambda () (progn
-                                     (and (fboundp 'recentf-cleanup)
-                                          (recentf-cleanup))
-                                     (and (fboundp 'projectile-cleanup-known-projects)
-                                          (projectile-cleanup-known-projects)))))
+                                          (and (fboundp 'recentf-cleanup)
+                                               (recentf-cleanup))
+                                          (and (fboundp 'projectile-cleanup-known-projects)
+                                               (projectile-cleanup-known-projects)))))
 
 ;; change evil initial mode state
 (menu-bar-mode t)
@@ -143,3 +143,4 @@ Single Capitals as you type."
 (add-hook 'mouse-leave-buffer-hook 'customary/stop-using-minibuffer)
 
 (setq tags-add-tables nil)
+

@@ -1,35 +1,22 @@
 (setq customary-programming-packages
       '(
-        paredit
         cmake-font-lock
         cmake-mode
-        flycheck
         racket
-        json-mode
         yasnippet
         (cc-mode :location built-in)
         (python :location built-in)
         (emacs-lisp :location built-in)
         ))
 
-;; (defun customary-programming/post-init-emacs-lisp ()
-;;     (remove-hook 'emacs-lisp-mode-hook 'auto-compile-mode))
+(defun customary-programming/post-init-emacs-lisp ()
+    (remove-hook 'emacs-lisp-mode-hook 'auto-compile-mode))
+
 
 (defun customary-programming/post-init-python ()
   (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
   ;; if you use pyton3, then you could comment the following line
   (setq python-shell-interpreter "python"))
-
-
-(defun customary-programming/init-ctags-update ()
-  (use-package ctags-update
-    :init
-    (progn
-      ;; (add-hook 'js2-mode-hook 'turn-on-ctags-auto-update-mode)
-      )
-    :defer t
-    :config
-    (spacemacs|hide-lighter ctags-auto-update-mode)))
 
 
 (defun customary-programming/post-init-yasnippet ()
@@ -55,6 +42,7 @@
                                                          org-mode-hook))
     ))
 
+
 (defun customary-programming/post-init-racket-mode ()
   (progn
     (eval-after-load 'racket-repl-mode
@@ -63,17 +51,11 @@
          (define-key racket-repl-mode-map (kbd "[") nil)))
     ))
 
-(defun customary-programming/post-init-json-mode ()
-  (add-to-list 'auto-mode-alist '("\\.tern-project\\'" . json-mode)))
-
-
-(defun customary-programming/init-flycheck-package ()
-  (use-package flycheck-package))
-
 
 (defun customary-programming/init-cmake-font-lock ()
   (use-package cmake-font-lock
     :defer t))
+
 
 (defun customary-programming/post-init-cmake-mode ()
   (progn
@@ -92,17 +74,9 @@
         (setq new-buffer-name (concat "cmake-" parent-dir))
         (rename-buffer new-buffer-name t)))
 
-    (add-hook 'cmake-mode-hook (function cmake-rename-buffer))))
+    (add-hook 'cmake-mode-hook (function cmake-rename-buffer)))
+  )
 
-
-(defun customary-programming/post-init-flycheck ()
-  (with-eval-after-load 'flycheck
-    (progn
-      ;; (setq flycheck-display-errors-function 'flycheck-display-error-messages)
-      (setq flycheck-display-errors-delay 0.2)
-      ;; (remove-hook 'c-mode-hook 'flycheck-mode)
-      ;; (remove-hook 'c++-mode-hook 'flycheck-mode)
-      )))
 
 (defun customary-programming/post-init-cc-mode ()
   (progn
@@ -166,22 +140,9 @@
     (setq c-default-style "linux") ;; set style to "linux"
     (setq c-basic-offset 4)
     (c-set-offset 'substatement-open 0))
+    (when (configuration-layer/package-usedp 'spell-checking)
+       (remove-hook 'c-mode-hook 'flycheck-mode)
+       (remove-hook 'c++-mode-hook 'flycheck-mode)
+    )
   ;; company backend should be grouped
   )
-
-
-(defun customary-programming/init-paredit ()
-  (use-package paredit
-    :commands (paredit-wrap-round
-               paredit-wrap-square
-               paredit-wrap-curly
-               paredit-splice-sexp-killing-backward)
-    :init
-    (progn
-      (bind-key* "s-j"
-                 #'paredit-splice-sexp-killing-backward)
-
-      (bind-key* "s-(" #'paredit-wrap-round)
-      (bind-key* "s-[" #'paredit-wrap-square)
-      (bind-key* "s-{" #'paredit-wrap-curly)
-      )))

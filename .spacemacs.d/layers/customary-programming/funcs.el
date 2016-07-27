@@ -12,7 +12,6 @@ comment box."
     (set-marker e nil)))
 
 
-
 ;; "http://stackoverflow.com/questions/2242572/emacs-todo-indicator-at-left-side"
 (defun customary/annotate-todo ()
   "put fringe marker on TODO: lines in the curent buffer"
@@ -24,51 +23,57 @@ comment box."
         (overlay-put overlay 'before-string (propertize "A"
                                                         'display '(left-fringe right-triangle)))))))
 
-
 (defun customary/run-current-file ()
   "Execute the current file.
 For example, if the current buffer is the file x.py, then it'll call 「python x.py」 in a shell.
-The file can be emacs lisp, php, perl, python, ruby, javascript, bash, ocaml, Visual Basic.
+The file can be Emacs Lisp, PHP, Perl, Python, Ruby, JavaScript, Bash, Ocaml, Visual Basic, TeX, Java, Clojure.
 File suffix is used to determine what program to run.
 
-If the file is modified, ask if you want to save first.
+If the file is modified or not saved, save it automatically before run.
 
 URL `http://ergoemacs.org/emacs/elisp_run_current_file.html'
-version 2015-08-21"
+version 2016-01-28"
   (interactive)
-  (let* (
-         (ξsuffix-map
+  (let (
+         (-suffix-map
           ;; (‹extension› . ‹shell program name›)
           `(
             ("php" . "php")
             ("pl" . "perl")
             ("py" . "python")
-            ("py3" . ,(if (string-equal system-type "windows-nt") "c:/Python32/python.exe" "python3"))
+            ("py3" . "python3") ;; even in windows, cygwin python will be called
             ("rb" . "ruby")
+            ("go" . "go run")
             ("js" . "node") ; node.js
             ("sh" . "bash")
-            ;; ("clj" . "java -cp /home/xah/apps/clojure-1.6.0/clojure-1.6.0.jar clojure.main")
-            ("ml" . "ocaml")
-            ("vbs" . "cscript")
+            ("rkt" . "racket")
             ("tex" . "pdflatex")
-            ("lua" . "lua")
-            ;; ("pov" . "/usr/local/bin/povray +R2 +A0.1 +J1.2 +Am2 +Q9 +H480 +W640")
+            ("latex" . "pdflatex")
+            ("java" . "javac")
             ))
-         (ξfname (buffer-file-name))
-         (ξfSuffix (file-name-extension ξfname))
-         (ξprog-name (cdr (assoc ξfSuffix ξsuffix-map)))
-         (ξcmd-str (concat ξprog-name " \""   ξfname "\"")))
 
-    (when (buffer-modified-p)
-      (when (y-or-n-p "Buffer modified. Do you want to save first?")
-        (save-buffer)))
+         -fname
+         -fSuffix
+         -prog-name
+         -cmd-str)
 
-    (if (string-equal ξfSuffix "el") ; special case for emacs lisp
-        (load ξfname)
-      (if ξprog-name
-          (progn
-            (message "Running…")
-            (async-shell-command ξcmd-str "*customary/run-current-file output*"))
-        (message "No recognized program file suffix for this file.")))))
+    (when (null (buffer-file-name)) (save-buffer))
+    (when (buffer-modified-p) (save-buffer))
 
+    (setq -fname (buffer-file-name))
+    (setq -fSuffix (file-name-extension -fname))
+    (setq -prog-name (cdr (assoc -fSuffix -suffix-map)))
+    (setq -cmd-str (concat -prog-name " \""   -fname "\""))
 
+    (cond
+     ((string-equal -fSuffix "el") (load -fname))
+     ((string-equal -fSuffix "java")
+      (progn
+        (shell-command -cmd-str "*xah-run-current-file output*" )
+        (shell-command
+         (format "java %s" (file-name-sans-extension (file-name-nondirectory -fname))))))
+     (t (if -prog-name
+            (progn
+              (message "Running…")
+              (shell-command -cmd-str "*xah-run-current-file output*" ))
+          (message "No recognized program file suffix for this file."))))))

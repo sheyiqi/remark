@@ -37,43 +37,15 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     better-defaults
      (auto-completion :variables
                       auto-completion-enable-sort-by-usage t
                       auto-completion-enable-help-tooltip t
                       :disabled-for org markdown )
      ;; semantic
-     better-defaults
      emacs-lisp
-     osx
-     (colors :variables
-             colors-enable-rainbow-identifiers nil
-             colors-enable-nyan-cat-progress-bar nil)
-     ;; deft
-     (ibuffer :variables
-              ibuffer-group-buffers-by 'projects)
-
-     (git :variables
-          git-magit-status-fullscreen t
-          magit-push-always-verify nil
-          magit-save-repository-buffers 'dontask
-          magit-revert-buffers 'silent
-          magit-refs-show-commit-count 'all
-          magit-revision-show-gravatars nil)
      markdown
      org
-     (shell :variables
-            shell-default-shell 'ansi-term;; eshell/shell/term/ansi-term/multi-term
-            shell-default-height 30
-            shell-default-position 'bottom)
-     ;; spell-checking
-     ;; syntax-checking
-     (syntax-checking :variables
-                      syntax-checking-enable-tooltips nil
-                      syntax-checking-enable-by-default nil)
-     (spell-checking :variables
-                     spell-checking-enable-by-default nil)
-     version-control
-     themes-megapack
      (c-c++ :variables
             c-c++-enable-clang-support t
             c-c++-default-mode-for-headers 'c++-mode)
@@ -83,7 +55,35 @@ values."
      shell-scripts
      ;; vimscripts
      yaml
+     ;; syntax-checking
+     (syntax-checking :variables
+                      syntax-checking-enable-tooltips nil
+                      syntax-checking-enable-by-default nil)
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil)
+     (shell :variables
+            shell-default-shell 'ansi-term;; eshell/shell/term/ansi-term/multi-term
+            shell-default-height 30
+            shell-default-position 'bottom)
+     (colors :variables
+             colors-enable-rainbow-identifiers nil
+             colors-enable-nyan-cat-progress-bar nil)
+     ;; deft
+     (ibuffer :variables
+              ibuffer-group-buffers-by 'projects)
+
+     (git :variables
+          git-magit-status-fullscreen nil
+          magit-push-always-verify nil
+          magit-save-repository-buffers 'dontask
+          magit-revert-buffers 'silent
+          magit-refs-show-commit-count 'all
+          magit-revision-show-gravatars nil)
+     version-control
+     eyebrowse
      ranger
+     themes-megapack
+     osx
      customary
      )
    ;; List of additional packages that will be installed without being
@@ -356,7 +356,6 @@ you should place your code here."
   (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
 
   (spaceline-compile))
-
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

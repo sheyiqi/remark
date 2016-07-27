@@ -6,8 +6,10 @@
 (define-key 'help-command (kbd "C-i") 'info-display-manual)
 
 (global-set-key (kbd "C-c a") 'org-agenda)
-(define-key global-map (kbd "<f9>") 'org-capture)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
+(define-key global-map (kbd "<f5>") 'org-capture)
+(define-key global-map (kbd "<f9>") 'customary/terminal)
+
 
 ;; http://emacs.stackexchange.com/questions/220/how-to-bind-c-i-as-different-from-tab
 ;; (define-key input-decode-map [?\C-i] [C-i])
@@ -46,7 +48,6 @@
 
 (spacemacs/declare-prefix "ot" "Toggle")
 
-
 (spacemacs/set-leader-keys "fR" 'customary/rename-file-and-buffer)
 
 ;;Must set key to nil to prevent error: Key sequence b m s starts with non-prefix key b m
@@ -64,6 +65,7 @@
 
 (spacemacs/set-leader-keys "gL" 'magit-log-buffer-file)
 (spacemacs/set-leader-keys "sj" 'helm-imenu)
+
 ;; deal with BOM
 (spacemacs/set-leader-keys "fl" 'find-file-literally-at-point)
 (spacemacs/set-leader-keys "fh" 'ffap-hexl-mode)

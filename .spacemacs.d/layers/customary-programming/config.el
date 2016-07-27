@@ -16,7 +16,6 @@
 
 ;; (add-hook 'term-mode-hook 'customary/ash-term-hooks)
 
-
 ;; reformat your json file, it requires python
 (defun beautify-json ()
   (interactive)
@@ -24,9 +23,6 @@
         (e (if mark-active (max (point) (mark)) (point-max))))
     (shell-command-on-region b e
                              "python -mjson.tool" (current-buffer) t)))
-
-
-
 
 (add-to-list 'auto-mode-alist (cons (concat "\\." (regexp-opt
                                                    '("xml"
@@ -38,10 +34,8 @@
 (setq nxml-slash-auto-complete-flag t)
 
 
-
 (add-to-list 'auto-mode-alist '("\\.mm\\'" . objc-mode))
 (add-to-list 'auto-mode-alist '("\\.c\\'" . c++-mode))
-
 
 
 ;; return nil to write content to file
@@ -61,4 +55,4 @@
        auto-mode-alist))
 
 
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
