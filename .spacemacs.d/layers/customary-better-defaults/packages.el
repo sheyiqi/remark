@@ -8,8 +8,6 @@
         flycheck
         discover-my-major
         ace-window
-        persp-mode
-        helm-github-stars
         helm
         tiny
         smartparens
