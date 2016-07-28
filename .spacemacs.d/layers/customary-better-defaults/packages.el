@@ -181,6 +181,8 @@
     (progn
       ;; (setq flycheck-display-errors-function 'flycheck-display-error-messages)
       (setq flycheck-display-errors-delay 0.2)
+      (ispell-change-dictionary "american" t)
+
       ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
       ;; if (aspell installed) { use aspell}
       ;; else if (hunspell installed) { use hunspell }
@@ -249,6 +251,16 @@
         ;; Turn off RUN-TOGETHER option when spell check text-mode
         (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
       (add-hook 'text-mode-hook 'text-mode-hook-setup)
+
+      (defun org-mode-hook-setup ()
+        "Configure `ispell-skip-region-alist' for `org-mode'."
+        (make-local-variable 'ispell-skip-region-alist)
+        (add-to-list 'ispell-skip-region-alist '(org-property-drawer-re))
+        (add-to-list 'ispell-skip-region-alist '("~" "~"))
+        (add-to-list 'ispell-skip-region-alist '("=" "="))
+        (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
+      (add-hook 'org-mode-hook #'org-mode-hook-setup)
+
       )))
 
 (defun customary-better-defaults/init-visual-regexp ()
