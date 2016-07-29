@@ -150,23 +150,26 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         leuven
+                         default
                          zenburn
                          spacemacs-dark
-                         ;; spacemacs-light
-                         ;; solarized-light
+                         spacemacs-light
+                         solarized-light
                          solarized-dark
-                         ;; leuven
                          monokai
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
+
    dotspacemacs-default-font '("Consolas"
-                               :size 16
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.0)
+                              :size 14
+                              :weight normal
+                              :width normal
+                              :powerline-scale 1.0)
+
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -320,9 +323,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;;解决org表格里面中英文对齐的问题
-  (when (configuration-layer/layer-usedp 'chinese)
-    (when (and (spacemacs/system-is-mac) window-system)
-      (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16)))
+  ;; (when (configuration-layer/layer-usedp 'chinese)
+  ;;  (when (and (spacemacs/system-is-mac) window-system)
+  ;;    (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16)))
 
   (setq-default
    default-tab-width 4
@@ -332,6 +335,7 @@ you should place your code here."
 
   (global-hungry-delete-mode t)
 
+  (add-to-list 'default-frame-alist '(font . "Consolas-14"))
 
   (defun alzuse/no-trailing-whitespace ()
     "Turn off display of trailing whitespace in this buffer."
