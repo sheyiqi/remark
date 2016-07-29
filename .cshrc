@@ -11,5 +11,5 @@ if ( $?prompt ) then
     set nobeep
 endif
 
-source ~/.alias.csh
+source ~/.csh_aliases
 
