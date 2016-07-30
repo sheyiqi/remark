@@ -15,6 +15,7 @@
 ;; (global-prettify-symbols-mode 1)
 (setq-default fill-column 80)
 
+
 (setq recenter-positions '(top middle bottom))
 ;; delete the selection with a key press
 (delete-selection-mode t)
@@ -58,6 +59,27 @@
 
 (setq large-file-warning-threshold 100000000)
 ;;http://batsov.com/emacsredux/blog/2015/05/09/emacs-on-os-x/
+
+;;(setq frame-title-format
+;;       '((:eval (if (buffer-file-name)
+;;                  (abbreviate-file-name (buffer-file-name))
+;;                 '("%b [%t]") ))))
+(setq-default frame-title-format
+              '(:eval
+                (format "%s@%s: %s %s"
+                        (or (file-remote-p default-directory 'user)
+                            user-real-login-name)
+                        (or (file-remote-p default-directory 'host)
+                            system-name)
+                        (buffer-name)
+                        (cond
+                         (buffer-file-truename
+                          (concat "(" buffer-file-truename ")"))
+                         (dired-directory
+                          (concat "{" dired-directory "}"))
+                         (t
+                          "[no file]")))))
+
 
 (setq save-abbrevs nil)
 

@@ -4,6 +4,7 @@
         cmake-mode
         racket
         yasnippet
+        ansi-color
         (cc-mode :location built-in)
         (python :location built-in)
         (emacs-lisp :location built-in)
@@ -16,7 +17,21 @@
 (defun customary-programming/post-init-python ()
   (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
   ;; if you use pyton3, then you could comment the following line
-  (setq python-shell-interpreter "python"))
+  (setq python-shell-interpreter "python3"))
+
+
+(defun customary-programming/post-init-ansi-color ()
+  (progn
+    (defun customary/colorize-compilation ()
+      "Colorize from `compilation-filter-start' to `point'."
+      (let ((inhibit-read-only t))
+        (ansi-color-apply-on-region
+         compilation-filter-start (point))))
+
+    (add-hook 'compilation-filter-hook
+              #'customary/colorize-compilation)
+    )
+  )
 
 
 (defun customary-programming/post-init-yasnippet ()
