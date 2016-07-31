@@ -355,7 +355,10 @@ you should place your code here."
   ;; `arrow', `arrow-fade', `bar', `box', `brace', `butt', `chamfer',
   ;; `contour', `curve', `rounded', `roundstub', `slant', `wave',
   ;; `zigzag`, `nil'
-  (setq powerline-default-separator 'arrow)
+  (if (spacemacs/system-is-mac)
+      (setq powerline-default-separator 'nil)
+    (setq powerline-default-separator 'arrow)
+  )
 
   (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
 
@@ -368,6 +371,32 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ibuffer-fontification-alist
+   (quote
+    (
+     (5 buffer-file-name 'font-lock-keyword-face)
+     (10 buffer-read-only font-lock-constant-face)
+     (15
+      (and buffer-file-name
+           (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
+      font-lock-doc-face)
+     (20
+      (string-match "^*"
+                    (buffer-name))
+      font-lock-comment-face)
+     (25
+      (and
+       (string-match "^ "
+                     (buffer-name))
+       (null buffer-file-name))
+      italic)
+     (30
+      (memq major-mode ibuffer-help-buffer-modes)
+      font-lock-comment-face)
+     (35
+      (derived-mode-p
+       (quote dired-mode))
+      font-lock-function-name-face))))
  '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
