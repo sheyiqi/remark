@@ -322,21 +322,62 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;;解决org表格里面中英文对齐的问题
-  ;; (when (configuration-layer/layer-usedp 'chinese)
-  ;;  (when (and (spacemacs/system-is-mac) window-system)
-  ;;    (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16)))
+  (defconst is-bsd (eq system-type 'berkeley-unix))
 
+  (add-to-list 'load-path (concat dotspacemacs-directory "/lisp"))
+
+  ;;--------------------------------------------------------------------------
+  ;; backup, autosave and lockfiles
+  (setq backup-directory-alist `((".*" . ,(concat spacemacs-cache-directory "/backups/"))))
+  ;; (setq auto-save-file-name-transforms `((".*", "~/.emacs.d/backups/" t))
+  (setq version-control t
+        make-backup-files t
+        backup-by-copying nil
+        delete-by-moving-to-trash nil
+        delete-old-versions t
+        kept-old-versions 5
+        kept-new-versions 9
+        auto-save-timeout 20
+        auto-save-interval 200
+        create-lockfiles t)
+
+  ;;--------------------------------------------------------------------------
+  ;; clipboard
+  (setq x-select-enable-clipboard t
+        x-select-enable-primary t
+        save-interprogram-paste-before-kill t
+        mouse-yank-at-point t)
+
+
+  ;;--------------------------------------------------------------------------
+  ;; editor
   (setq-default
    default-tab-width 4
+   tab-width 4
+   c-basic-offset 4
+   indent-tabs-mode nil
+   tab-always-indent t
    require-final-newline t
    show-trailing-whitespace t
    )
 
   (global-hungry-delete-mode t)
 
+
+  ;; dired -------------------------------------------------------------------
+  (setq-default dired-listing-switches (if is-bsd "-alh" "-alhv"))
+  (setq dired-recursive-deletes 'top)
+  (setq dired-recursive-copies 'top)
+  (setq dired-dwim-target t)
+
+  (setq dired-auto-revert-buffer t)
+
+
+  ;; Font --------------------------------------------------------------------
   (add-to-list 'default-frame-alist '(font . "Consolas-14"))
 
+
+  ;; trailing-whitespace
   (defun alzuse/no-trailing-whitespace ()
     "Turn off display of trailing whitespace in this buffer."
     (setq show-trailing-whitespace nil))
@@ -362,46 +403,22 @@ you should place your code here."
 
   (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
 
+  ;; tramp -------------------------------------------------------------------
+  (setq password-cache-expiry nil)
+  (setq tramp-verbose 6)
+  (setq tramp-ssh-controlmaster-options
+        (s-join " "
+                `("-o ControlMaster=yes"
+                  "-o ControlPersist=yes"
+                  ,(format "-oControlPath='%s/ssh.%%%%r@%%%%h:%%%%p'" spacemacs-cache-directory))))
+
+  ;;解决org表格里面中英文对齐的问题
+  ;; (when (configuration-layer/layer-usedp 'chinese)
+  ;;  (when (and (spacemacs/system-is-mac) window-system)
+  ;;    (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16)))
+
+
   (spaceline-compile))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ibuffer-fontification-alist
-   (quote
-    (
-     (5 buffer-file-name 'font-lock-keyword-face)
-     (10 buffer-read-only font-lock-constant-face)
-     (15
-      (and buffer-file-name
-           (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
-      font-lock-doc-face)
-     (20
-      (string-match "^*"
-                    (buffer-name))
-      font-lock-comment-face)
-     (25
-      (and
-       (string-match "^ "
-                     (buffer-name))
-       (null buffer-file-name))
-      italic)
-     (30
-      (memq major-mode ibuffer-help-buffer-modes)
-      font-lock-comment-face)
-     (35
-      (derived-mode-p
-       (quote dired-mode))
-      font-lock-function-name-face))))
- '(paradox-github-token t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

@@ -38,17 +38,6 @@
 (add-to-list 'auto-mode-alist '("\\.c\\'" . c++-mode))
 
 
-;; return nil to write content to file
-(defun customary/untabify-buffer ()
-  (interactive)
-  (save-excursion
-    (untabify (point-min) (point-max)) nil))
-
-(add-hook 'c++-mode-hook
-          '(lambda ()
-             (add-hook 'write-contents-hooks
-                       'customary/untabify-buffer nil t)))
-
 (setq auto-mode-alist
       (append
        '(("\\.mak\\'" . makefile-bsdmake-mode))

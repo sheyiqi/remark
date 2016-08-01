@@ -93,3 +93,4 @@
 (spacemacs/set-leader-keys "oll" 'customary/load-my-layout)
 (spacemacs/set-leader-keys "ols" 'customary/save-my-layout)
 
+(add-hook 'comint-mode-hook (lambda () (define-key comint-mode-map "\t" 'self-insert-command)))

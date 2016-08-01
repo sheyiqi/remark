@@ -1,24 +1,14 @@
 (setq customary-programming-packages
       '(
+        ansi-color
         cmake-font-lock
         cmake-mode
         racket
         yasnippet
-        ansi-color
         (cc-mode :location built-in)
         (python :location built-in)
         (emacs-lisp :location built-in)
         ))
-
-(defun customary-programming/post-init-emacs-lisp ()
-    (remove-hook 'emacs-lisp-mode-hook 'auto-compile-mode))
-
-
-(defun customary-programming/post-init-python ()
-  (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-  ;; if you use pyton3, then you could comment the following line
-  (setq python-shell-interpreter "python3"))
-
 
 (defun customary-programming/post-init-ansi-color ()
   (progn
@@ -32,30 +22,6 @@
               #'customary/colorize-compilation)
     )
   )
-
-
-(defun customary-programming/post-init-yasnippet ()
-  (progn
-    (set-face-background 'secondary-selection "gray")
-    (setq-default yas-prompt-functions '(yas-ido-prompt yas-dropdown-prompt))
-    (mapc #'(lambda (hook) (remove-hook hook 'spacemacs/load-yasnippet)) '(prog-mode-hook
-                                                                      org-mode-hook
-                                                                      markdown-mode-hook))
-    (defun customary/load-yasnippet ()
-      (interactive)
-      (unless yas-global-mode
-        (progn
-          (yas-global-mode 1)
-          (setq my-snippet-dir (expand-file-name "~/.spacemacs.d/snippets"))
-          (setq yas-snippet-dirs  my-snippet-dir)
-          (yas-load-directory my-snippet-dir)
-          (setq yas-wrap-around-region t)))
-      (yas-minor-mode 1))
-
-    (spacemacs/add-to-hooks 'customary/load-yasnippet '(prog-mode-hook
-                                                         markdown-mode-hook
-                                                         org-mode-hook))
-    ))
 
 
 (defun customary-programming/post-init-racket-mode ()
@@ -93,8 +59,47 @@
   )
 
 
-(defun customary-programming/post-init-cc-mode ()
+(spacemacs|use-package-add-hook emacs-lisp
+  :post-config
+  (remove-hook 'emacs-lisp-mode-hook 'auto-compile-mode))
+
+
+(spacemacs|use-package-add-hook python
+  :post-config
+  (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+  ;; if you use pyton3, then you could comment the following line
+  (setq python-shell-interpreter "python3"))
+
+
+(spacemacs|use-package-add-hook yasnippet
+    :post-config
   (progn
+    (set-face-background 'secondary-selection "gray")
+    (setq-default yas-prompt-functions '(yas-ido-prompt yas-dropdown-prompt))
+    (mapc #'(lambda (hook) (remove-hook hook 'spacemacs/load-yasnippet)) '(prog-mode-hook
+                                                                      org-mode-hook
+                                                                      markdown-mode-hook))
+    (defun customary/load-yasnippet ()
+      (interactive)
+      (unless yas-global-mode
+        (progn
+          (yas-global-mode 1)
+          (setq my-snippet-dir (expand-file-name "~/.spacemacs.d/snippets"))
+          (setq yas-snippet-dirs  my-snippet-dir)
+          (yas-load-directory my-snippet-dir)
+          (setq yas-wrap-around-region t)))
+      (yas-minor-mode 1))
+
+    (spacemacs/add-to-hooks 'customary/load-yasnippet '(prog-mode-hook
+                                                        org-mode-hook
+                                                        markdown-mode-hook
+                                                        ))
+    ))
+
+(spacemacs|use-package-add-hook c-c++
+  :post-config
+  (progn
+    (require 'company)
     (setq company-backends-c-mode-common '((company-dabbrev-code :with company-keywords)
                                            company-files company-dabbrev))
 
@@ -159,5 +164,16 @@
        (remove-hook 'c-mode-hook 'flycheck-mode)
        (remove-hook 'c++-mode-hook 'flycheck-mode)
     )
+
+    ;; return nil to write content to file
+    (defun customary/untabify-buffer ()
+      (interactive)
+      (save-excursion
+        (untabify (point-min) (point-max)) nil))
+
+    (add-hook 'c++-mode-hook
+              '(lambda ()
+                 (add-hook 'write-contents-hooks
+                           'customary/untabify-buffer nil t)))
   ;; company backend should be grouped
   )

@@ -1,19 +1,19 @@
 (setq customary-better-defaults-packages
       '(
         projectile
+        peep-dired
+        command-log
         visual-regexp
         visual-regexp-steroids
-        command-log
         evil
         flycheck
         discover-my-major
-        ace-window
         helm
         tiny
         smartparens
-        peep-dired
         markdown-mode
         company
+        ibuffer
         ))
 
 (defun customary-better-defaults/init-peep-dired ()
@@ -25,72 +25,78 @@
     :bind (:map dired-mode-map
                 ("P" . peep-dired))))
 
-
-(defun customary-better-defaults/post-init-smartparens ()
-  (use-package smartparens
-    :defer t
-    :init
-    (progn
-      (defun wrap-sexp-with-new-round-parens ()
-        (interactive)
-        (insert "()")
-        (backward-char)
-        (sp-forward-slurp-sexp))
-
-      (global-set-key (kbd "C-(") 'wrap-sexp-with-new-round-parens))
-    :config
-    (progn
-      (setq sp-highlight-pair-overlay nil)
-
-      (evil-define-key 'normal sp-keymap
-        (kbd ")>") 'sp-forward-slurp-sexp
-        (kbd ")<") 'sp-forward-barf-sexp
-        (kbd "(>") 'sp-backward-barf-sexp
-        (kbd "(<") 'sp-backward-slurp-sexp))))
-
-(defun customary-better-defaults/post-init-helm ()
-  (with-eval-after-load 'helm
-    (progn
-      ;; limit max number of matches displayed for speed
-      (setq helm-candidate-number-limit 100)
-      ;; ignore boring files like .o and .a
-      (setq helm-ff-skip-boring-files t)
-      ;; replace locate with spotlight on Mac
-      (setq helm-locate-command "mdfind -name %s %s")
-      (push "\\.emlx$" helm-boring-file-regexp-list)
-      )
-    ))
-
-
 (defun customary-better-defaults/post-init-command-log ()
   (with-eval-after-load 'global-command-log-mode
     (setq clm/log-command-exceptions* (append clm/log-command-exceptions*
                                               '(evil-next-visual-line
                                                 evil-previous-visual-line)))))
 
-(defun customary-better-defaults/init-osx-dictionary ()
-  (use-package osx-dictionary
+
+(defun customary-better-defaults/init-visual-regexp ()
+  (use-package visual-regexp
+    :commands (vr/replace vr/query-replace)))
+
+(defun customary-better-defaults/init-visual-regexp-steroids ()
+  (use-package visual-regexp-steroids
+    :commands (vr/select-replace vr/select-query-replace)
     :init
     (progn
-      (evilified-state-evilify osx-dictionary-mode osx-dictionary-mode-map)
-      (setq osx-dictionary-use-chinese-text-segmentation t)
-      (global-set-key (kbd "C-c d") 'osx-dictionary-search-pointer)
-      )))
+      (define-key global-map (kbd "C-c r") 'vr/replace)
+      (define-key global-map (kbd "C-c q") 'vr/query-replace))))
 
 
-(defun customary-better-defaults/post-init-ace-window ()
-  (global-set-key (kbd "C-x C-o") #'ace-window))
+(spacemacs|use-package-add-hook smartparens
+  :post-init
+  (progn
+    (defun wrap-sexp-with-new-round-parens ()
+      (interactive)
+      (insert "()")
+      (backward-char)
+      (sp-forward-slurp-sexp))
 
-(defun customary-better-defaults/init-discover-my-major ()
-  (use-package discover-my-major
-    :defer t
-    :init
-    (progn
-      (spacemacs/set-leader-keys (kbd "mhm") 'discover-my-major)
-      (evilified-state-evilify makey-key-mode makey-key-mode-get-key-map))))
+    (global-set-key (kbd "C-(") 'wrap-sexp-with-new-round-parens))
+
+  :post-config
+  (progn
+    (setq sp-highlight-pair-overlay nil)
+
+    (evil-define-key 'normal sp-keymap
+      (kbd ")>") 'sp-forward-slurp-sexp
+      (kbd ")<") 'sp-forward-barf-sexp
+      (kbd "(>") 'sp-backward-barf-sexp
+      (kbd "(<") 'sp-backward-slurp-sexp)))
 
 
-(defun customary-better-defaults/post-init-evil ()
+(spacemacs|use-package-add-hook helm
+  :post-config
+  ;; limit max number of matches displayed for speed
+  (setq helm-candidate-number-limit 128)
+  ;; ignore boring files like .o and .a
+  (setq helm-ff-skip-boring-files t)
+  ;; replace locate with spotlight on Mac
+  (setq helm-locate-command "mdfind -name %s %s")
+  (push "\\.emlx$" helm-boring-file-regexp-list)
+  )
+
+
+(spacemacs|use-package-add-hook osx-dictionary
+  :post-init
+  (progn
+    (evilified-state-evilify osx-dictionary-mode osx-dictionary-mode-map)
+    (setq osx-dictionary-use-chinese-text-segmentation t)
+    (global-set-key (kbd "C-c d") 'osx-dictionary-search-pointer)
+    ))
+
+
+(spacemacs|use-package-add-hook discover-my-major
+  :post-config
+  (progn
+    (spacemacs/set-leader-keys (kbd "mhm") 'discover-my-major)
+    (evilified-state-evilify makey-key-mode makey-key-mode-get-key-map)))
+
+
+(spacemacs|use-package-add-hook evil
+  :post-config
   (progn
     (setcdr evil-insert-state-map nil)
     (define-key evil-insert-state-map [escape] 'evil-normal-state)
@@ -99,12 +105,12 @@
 
     ;; ;; change evil initial mode state
     (loop for (mode . state) in
-          '((shell-mode . normal))
+          '((shell-mode . insert))
           do (evil-set-initial-state mode state))
 
     (add-hook 'edebug-mode-hook '(lambda () (if edebug-mode
-                                            (evil-emacs-state)
-                                          (evil-normal-state))))
+                                                (evil-emacs-state)
+                                              (evil-normal-state))))
 
     ;;mimic "nzz" behaviou in vim
     (defadvice evil-ex-search-next (after advice-for-evil-search-next activate)
@@ -171,117 +177,103 @@
     ;;       evil-operator-state-tag (propertize "[O]" 'face '((:background "purple"))))
 
     (define-key evil-insert-state-map (kbd "C-z") 'evil-emacs-state)
+
+
+    (evil-define-key 'insert comint-mode-map
+      (kbd "C-k") 'kill-line)
+    (evil-define-key 'normal comint-mode-map
+      (kbd "C-k") 'kill-line)
     ))
 
-(defun customary-better-defaults/init-flycheck-package ()
-  (use-package flycheck-package))
+(spacemacs|use-package-add-hook flycheck
+  :post-config
+  (progn
+    ;; (setq flycheck-display-errors-function 'flycheck-display-error-messages)
+    (setq flycheck-display-errors-delay 0.2)
+    (ispell-change-dictionary "american" t)
 
-(defun customary-better-defaults/post-init-flycheck ()
-  (with-eval-after-load 'flycheck
-    (progn
-      ;; (setq flycheck-display-errors-function 'flycheck-display-error-messages)
-      (setq flycheck-display-errors-delay 0.2)
-      (ispell-change-dictionary "american" t)
+    ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
+    ;; if (aspell installed) { use aspell}
+    ;; else if (hunspell installed) { use hunspell }
+    ;; whatever spell checker I use, I always use English dictionary
+    ;; I prefer use aspell because:
+    ;; 1. aspell is older
+    ;; 2. looks Kevin Atkinson still get some road map for aspell:
+    ;; @see http://lists.gnu.org/archive/html/aspell-announce/2011-09/msg00000.html
+    (defun flyspell-detect-ispell-args (&optional run-together)
+      "if RUN-TOGETHER is true, spell check the CamelCase words."
+      (let (args)
+        (cond
+         ((string-match  "aspell$" ispell-program-name)
+          ;; Force the English dictionary for aspell
+          ;; Support Camel Case spelling check (tested with aspell 0.6)
+          (setq args (list "--sug-mode=ultra" "--lang=en_US"))
+          (if run-together
+              (setq args (append args '("--run-together" "--run-together-limit=5" "--run-together-min=2")))))
+         ((string-match "hunspell$" ispell-program-name)
+          ;; Force the English dictionary for hunspell
+          (setq args "-d en_US")))
+        args))
 
-      ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
-      ;; if (aspell installed) { use aspell}
-      ;; else if (hunspell installed) { use hunspell }
-      ;; whatever spell checker I use, I always use English dictionary
-      ;; I prefer use aspell because:
-      ;; 1. aspell is older
-      ;; 2. looks Kevin Atkinson still get some road map for aspell:
-      ;; @see http://lists.gnu.org/archive/html/aspell-announce/2011-09/msg00000.html
-      (defun flyspell-detect-ispell-args (&optional run-together)
-        "if RUN-TOGETHER is true, spell check the CamelCase words."
-        (let (args)
-          (cond
-           ((string-match  "aspell$" ispell-program-name)
-            ;; Force the English dictionary for aspell
-            ;; Support Camel Case spelling check (tested with aspell 0.6)
-            (setq args (list "--sug-mode=ultra" "--lang=en_US"))
-            (if run-together
-                (setq args (append args '("--run-together" "--run-together-limit=5" "--run-together-min=2")))))
-           ((string-match "hunspell$" ispell-program-name)
-            ;; Force the English dictionary for hunspell
-            (setq args "-d en_US")))
-          args))
+    (cond
+     ((executable-find "aspell")
+      ;; you may also need `ispell-extra-args'
+      (setq ispell-program-name "aspell"))
+     ((executable-find "hunspell")
+      (setq ispell-program-name "hunspell")
 
-      (cond
-       ((executable-find "aspell")
-        ;; you may also need `ispell-extra-args'
-        (setq ispell-program-name "aspell"))
-       ((executable-find "hunspell")
-        (setq ispell-program-name "hunspell")
+      ;; Please note that `ispell-local-dictionary` itself will be passed to hunspell cli with "-d"
+      ;; it's also used as the key to lookup ispell-local-dictionary-alist
+      ;; if we use different dictionary
+      (setq ispell-local-dictionary "en_US")
+      (setq ispell-local-dictionary-alist
+            '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))))
+     (t (setq ispell-program-name nil)))
 
-        ;; Please note that `ispell-local-dictionary` itself will be passed to hunspell cli with "-d"
-        ;; it's also used as the key to lookup ispell-local-dictionary-alist
-        ;; if we use different dictionary
-        (setq ispell-local-dictionary "en_US")
-        (setq ispell-local-dictionary-alist
-              '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))))
-       (t (setq ispell-program-name nil)))
+    ;; ispell-cmd-args is useless, it's the list of *extra* arguments we will append to the ispell process when "ispell-word" is called.
+    ;; ispell-extra-args is the command arguments which will *always* be used when start ispell process
+    ;; Please note when you use hunspell, ispell-extra-args will NOT be used.
+    ;; Hack ispell-local-dictionary-alist instead.
+    (setq-default ispell-extra-args (flyspell-detect-ispell-args t))
+    ;; (setq ispell-cmd-args (flyspell-detect-ispell-args))
+    (defadvice ispell-word (around my-ispell-word activate)
+      (let ((old-ispell-extra-args ispell-extra-args))
+        (ispell-kill-ispell t)
+        (setq ispell-extra-args (flyspell-detect-ispell-args))
+        ad-do-it
+        (setq ispell-extra-args old-ispell-extra-args)
+        (ispell-kill-ispell t)
+        ))
 
-      ;; ispell-cmd-args is useless, it's the list of *extra* arguments we will append to the ispell process when "ispell-word" is called.
-      ;; ispell-extra-args is the command arguments which will *always* be used when start ispell process
-      ;; Please note when you use hunspell, ispell-extra-args will NOT be used.
-      ;; Hack ispell-local-dictionary-alist instead.
-      (setq-default ispell-extra-args (flyspell-detect-ispell-args t))
-      ;; (setq ispell-cmd-args (flyspell-detect-ispell-args))
-      (defadvice ispell-word (around my-ispell-word activate)
-        (let ((old-ispell-extra-args ispell-extra-args))
-          (ispell-kill-ispell t)
-          (setq ispell-extra-args (flyspell-detect-ispell-args))
-          ad-do-it
-          (setq ispell-extra-args old-ispell-extra-args)
-          (ispell-kill-ispell t)
-          ))
+    (defadvice flyspell-auto-correct-word (around my-flyspell-auto-correct-word activate)
+      (let ((old-ispell-extra-args ispell-extra-args))
+        (ispell-kill-ispell t)
+        ;; use emacs original arguments
+        (setq ispell-extra-args (flyspell-detect-ispell-args))
+        ad-do-it
+        ;; restore our own ispell arguments
+        (setq ispell-extra-args old-ispell-extra-args)
+        (ispell-kill-ispell t)
+        ))
 
-      (defadvice flyspell-auto-correct-word (around my-flyspell-auto-correct-word activate)
-        (let ((old-ispell-extra-args ispell-extra-args))
-          (ispell-kill-ispell t)
-          ;; use emacs original arguments
-          (setq ispell-extra-args (flyspell-detect-ispell-args))
-          ad-do-it
-          ;; restore our own ispell arguments
-          (setq ispell-extra-args old-ispell-extra-args)
-          (ispell-kill-ispell t)
-          ))
+    (defun text-mode-hook-setup ()
+      ;; Turn off RUN-TOGETHER option when spell check text-mode
+      (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
+    (add-hook 'text-mode-hook 'text-mode-hook-setup)
 
-      (defun text-mode-hook-setup ()
-        ;; Turn off RUN-TOGETHER option when spell check text-mode
-        (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
-      (add-hook 'text-mode-hook 'text-mode-hook-setup)
-
-      (defun org-mode-hook-setup ()
-        "Configure `ispell-skip-region-alist' for `org-mode'."
-        (make-local-variable 'ispell-skip-region-alist)
-        (add-to-list 'ispell-skip-region-alist '(org-property-drawer-re))
-        (add-to-list 'ispell-skip-region-alist '("~" "~"))
-        (add-to-list 'ispell-skip-region-alist '("=" "="))
-        (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
-      (add-hook 'org-mode-hook #'org-mode-hook-setup)
-
-      )))
-
-(defun customary-better-defaults/init-visual-regexp ()
-  (use-package visual-regexp
-    :commands (vr/replace vr/query-replace)))
-
-(defun customary-better-defaults/init-visual-regexp-steroids ()
-  (use-package visual-regexp-steroids
-    :commands (vr/select-replace vr/select-query-replace)
-    :init
-    (progn
-      (define-key global-map (kbd "C-c r") 'vr/replace)
-      (define-key global-map (kbd "C-c q") 'vr/query-replace))))
+    (defun org-mode-hook-setup ()
+      "Configure `ispell-skip-region-alist' for `org-mode'."
+      (make-local-variable 'ispell-skip-region-alist)
+      (add-to-list 'ispell-skip-region-alist '(org-property-drawer-re))
+      (add-to-list 'ispell-skip-region-alist '("~" "~"))
+      (add-to-list 'ispell-skip-region-alist '("=" "="))
+      (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
+    (add-hook 'org-mode-hook #'org-mode-hook-setup)
+    ))
 
 
-(defun customary-better-defaults/init-ag ()
-  (use-package ag
-    :init))
-
-
-(defun customary-better-defaults/post-init-company ()
+(spacemacs|use-package-add-hook company
+  :post-config
   (progn
     (setq company-minimum-prefix-length 1
           company-idle-delay 0.08)
@@ -295,3 +287,149 @@
       (spacemacs|add-company-hook conf-unix-mode)
       )
     ))
+
+
+;;(defun customary-better-defaults/pre-init-ibuffer ()
+;;  (with-eval-after-load 'ibuffer
+(spacemacs|use-package-add-hook ibuffer
+  :pre-init
+  (require 'projectile)
+  (require 'f)
+  (setq ibuffer-never-show-predicates
+        `("^\\*inferior-ensime"
+          "^\\*ensime-update"
+          "^\\*helm"))
+
+  (setq ibuffer-saved-filter-groups
+        (let ((files-by-project
+               (--map `(,(f-filename it) (filename . ,(f-expand it))) projectile-known-projects)))
+          `(("default"
+             ,@files-by-project
+             ("dired" (mode . dired-mode))
+             ("emacs" (or (name . "\\*Messages\\*")
+                          (name . "\\*Compile-Log\\*")
+                          (name . "\\*scratch\\*")
+                          (name . "\\*Backtrace\\*")
+                          (name . "\\*spacemacs\\*")
+                          (name . "\\*emacs\\*")))
+             ("help" (name . "\\*Help\\*"))))))
+
+  :post-init
+  (setq ibuffer-show-empty-filter-groups nil)
+
+  (defun customary/switch-ibuffer-group ()
+    (ibuffer-switch-to-saved-filter-groups "default"))
+
+  (add-hook 'ibuffer-mode-hook 'customary/switch-ibuffer-group)
+  (add-hook 'ibuffer-mode-hook 'ibuffer-auto-mode)
+
+
+  (defface customary/ibuffer-common-face
+    '((default
+        :inherit font-lock-keyword-face
+        :underline nil
+        :background "red"))
+    "Face used for ibuffer common buffers")
+
+  (defface customary/ibuffer-common-modified-face
+    '((default
+        :inherit customary/ibuffer-common-face
+        :weight bold
+        ))
+    "Face used for ibuffer common but modifed buffers")
+
+  (defface customary/ibuffer-star-face
+    '((default
+        :inherit font-lock-preprocessor-face
+        :slant italic))
+    "Face used for star-stared buffers")
+
+  (defface customary/ibuffer-readonly-face
+    '((default
+        :inherit font-lock-constant-face))
+    "Face used for readonly buffers")
+
+  (defface customary/ibuffer-compressed-file-face
+    '((default
+        :inherit font-lock-doc-face))
+    "Face used for compressed file buffers")
+
+  (defface customary/ibuffer-null-face
+    '((default
+        :slant italic))
+    "Face used for null buffers")
+
+  (defface customary/ibuffer-help-buffer-mode-face
+    '((default
+        :inherit font-lock-comment-face
+        :foreground "green"
+        ))
+    "Face used for help buffer modes")
+
+  (defface customary/ibuffer-dired-mode-face
+    '((default
+        :inherit font-lock-function-name-face
+        ))
+    "Face used for dired modes")
+
+
+  (setq ibuffer-fontification-alist
+        '(
+          ;; (20
+          ;;  (and buffer-file-name
+          ;;       (buffer-modified-p (buffer-file-name)))
+          ;;  customary/ibuffer-common-modified-face)
+
+          (25
+           buffer-file-name
+           customary/ibuffer-common-face)
+
+          (30
+           buffer-read-only
+           customary/ibuffer-readonly-face)
+
+          (35
+           (and buffer-file-name
+                (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
+           customary/ibuffer-compressed-file-face)
+
+          (40
+           (string-match "^*"
+                         (buffer-name))
+           customary/ibuffer-star-face)
+
+          (45
+           (and
+            (string-match "^ "
+                          (buffer-name))
+            (null buffer-file-name))
+           customary/ibuffer-null-face)
+
+          (50
+           (memq major-mode ibuffer-help-buffer-modes)
+           customary/ibuffer-help-buffer-mode-face)
+
+          (55
+           (derived-mode-p
+            (quote dired-mode))
+           customary/ibuffer-dired-mode-face)))
+
+  ;; Use human readable Size column instead of original one
+  (define-ibuffer-column size-h
+    (:name "Size" :inline t)
+    (cond
+     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+     (t (format "%8d" (buffer-size)))))
+
+  ;; Modify the default ibuffer-formats
+  (setq ibuffer-formats
+        '((mark modified read-only " "
+                (name 18 18 :left :elide)
+                " "
+                (size-h 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " "
+                filename-and-process))))

@@ -6,6 +6,7 @@
     `(eval-after-load ,feature
                       '(progn ,@body))))
 
+
 (configuration-layer/declare-layers '(
                                       customary-better-defaults
                                       customary-programming
