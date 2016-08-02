@@ -292,144 +292,174 @@
 ;;(defun customary-better-defaults/pre-init-ibuffer ()
 ;;  (with-eval-after-load 'ibuffer
 (spacemacs|use-package-add-hook ibuffer
-  :pre-init
-  (require 'projectile)
-  (require 'f)
-  (setq ibuffer-never-show-predicates
-        `("^\\*inferior-ensime"
-          "^\\*ensime-update"
-          "^\\*helm"))
+  :post-config
+  (progn
+    (require 'projectile)
+    (require 'f)
 
-  (setq ibuffer-saved-filter-groups
-        (let ((files-by-project
-               (--map `(,(f-filename it) (filename . ,(f-expand it))) projectile-known-projects)))
-          `(("default"
-             ,@files-by-project
-             ("dired" (mode . dired-mode))
-             ("emacs" (or (name . "\\*Messages\\*")
-                          (name . "\\*Compile-Log\\*")
-                          (name . "\\*scratch\\*")
-                          (name . "\\*Backtrace\\*")
-                          (name . "\\*spacemacs\\*")
-                          (name . "\\*emacs\\*")))
-             ("help" (name . "\\*Help\\*"))))))
+    (setq ibuffer-never-show-predicates
+          `("^\\*inferior-ensime"
+            "^\\*ensime-update"
+            "^\\*Completions"
+            "^\\*helm"))
 
-  :post-init
-  (setq ibuffer-show-empty-filter-groups nil)
+    (setq ibuffer-show-empty-filter-groups nil)
 
-  (defun customary/switch-ibuffer-group ()
-    (ibuffer-switch-to-saved-filter-groups "default"))
+    ;; (setq ibuffer-saved-filter-groups
+    ;;       (let ((files-by-project
+    ;;              (--map `(,(f-filename it) (filename . ,(f-expand it))) projectile-known-projects)))
+    ;;         `(("default"
+    ;;            ,@files-by-project
+    ;;            ("dired" (mode . dired-mode))
+    ;;            ("emacs" (or (name . "\\*Messages\\*")
+    ;;                         (name . "\\*Compile-Log\\*")
+    ;;                         (name . "\\*scratch\\*")
+    ;;                         (name . "\\*Backtrace\\*")
+    ;;                         (name . "\\*spacemacs\\*")
+    ;;                         (name . "\\*emacs\\*")))
+    ;;            ("help" (name . "\\*Help\\*"))))))
 
-  (add-hook 'ibuffer-mode-hook 'customary/switch-ibuffer-group)
-  (add-hook 'ibuffer-mode-hook 'ibuffer-auto-mode)
-
-
-  (defface customary/ibuffer-common-face
-    '((default
-        :inherit font-lock-keyword-face
-        :underline nil
-        :background "red"))
-    "Face used for ibuffer common buffers")
-
-  (defface customary/ibuffer-common-modified-face
-    '((default
-        :inherit customary/ibuffer-common-face
-        :weight bold
-        ))
-    "Face used for ibuffer common but modifed buffers")
-
-  (defface customary/ibuffer-star-face
-    '((default
-        :inherit font-lock-preprocessor-face
-        :slant italic))
-    "Face used for star-stared buffers")
-
-  (defface customary/ibuffer-readonly-face
-    '((default
-        :inherit font-lock-constant-face))
-    "Face used for readonly buffers")
-
-  (defface customary/ibuffer-compressed-file-face
-    '((default
-        :inherit font-lock-doc-face))
-    "Face used for compressed file buffers")
-
-  (defface customary/ibuffer-null-face
-    '((default
-        :slant italic))
-    "Face used for null buffers")
-
-  (defface customary/ibuffer-help-buffer-mode-face
-    '((default
-        :inherit font-lock-comment-face
-        :foreground "green"
-        ))
-    "Face used for help buffer modes")
-
-  (defface customary/ibuffer-dired-mode-face
-    '((default
-        :inherit font-lock-function-name-face
-        ))
-    "Face used for dired modes")
+    ;; (add-hook 'ibuffer-hook
+    ;;           (lambda ()
+    ;;             (ibuffer-auto-mode 1)
+    ;;             (ibuffer-switch-to-saved-filter-groups "default")))
 
 
-  (setq ibuffer-fontification-alist
-        '(
-          ;; (20
-          ;;  (and buffer-file-name
-          ;;       (buffer-modified-p (buffer-file-name)))
-          ;;  customary/ibuffer-common-modified-face)
+    (defface customary/ibuffer-common-face
+      '((default
+          :inherit font-lock-keyword-face
+          :underline nil
+          :background "yellow"))
+      "Face used for ibuffer common buffers")
 
-          (25
-           buffer-file-name
-           customary/ibuffer-common-face)
+    (defface customary/ibuffer-shell-term-face
+      '((default
+          :inherit font-lock-keyword-face
+          :underline nil))
+      "Face used for ibuffer shell/term/eshell buffers")
 
-          (30
-           buffer-read-only
-           customary/ibuffer-readonly-face)
+    (defface customary/ibuffer-common-modified-face
+      '((default
+          :inherit customary/ibuffer-common-face
+          :weight bold
+          ))
+      "Face used for ibuffer common but modifed buffers")
 
-          (35
-           (and buffer-file-name
-                (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
-           customary/ibuffer-compressed-file-face)
+    (defface customary/ibuffer-star-face
+      '((default
+          :inherit font-lock-preprocessor-face
+          :slant italic))
+      "Face used for star-stared buffers")
 
-          (40
-           (string-match "^*"
-                         (buffer-name))
-           customary/ibuffer-star-face)
+    (defface customary/ibuffer-readonly-face
+      '((default
+          :inherit font-lock-constant-face))
+      "Face used for readonly buffers")
 
-          (45
-           (and
-            (string-match "^ "
-                          (buffer-name))
-            (null buffer-file-name))
-           customary/ibuffer-null-face)
+    (defface customary/ibuffer-compressed-file-face
+      '((default
+          :inherit font-lock-doc-face))
+      "Face used for compressed file buffers")
 
-          (50
-           (memq major-mode ibuffer-help-buffer-modes)
-           customary/ibuffer-help-buffer-mode-face)
+    (defface customary/ibuffer-null-face
+      '((default
+          :slant italic))
+      "Face used for null buffers")
 
-          (55
-           (derived-mode-p
-            (quote dired-mode))
-           customary/ibuffer-dired-mode-face)))
+    (defface customary/ibuffer-help-buffer-mode-face
+      '((default
+          :inherit font-lock-comment-face
+          :foreground "green"
+          ))
+      "Face used for help buffer modes")
 
-  ;; Use human readable Size column instead of original one
-  (define-ibuffer-column size-h
-    (:name "Size" :inline t)
-    (cond
-     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-     (t (format "%8d" (buffer-size)))))
+    (defface customary/ibuffer-dired-mode-face
+      '((default
+          :inherit font-lock-function-name-face
+          ))
+      "Face used for dired modes")
 
-  ;; Modify the default ibuffer-formats
-  (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 18 18 :left :elide)
-                " "
-                (size-h 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                filename-and-process))))
+    (defconst customary/ibuffer-fontification-alist
+      '((ruby-mode . font-lock-string-face)
+        (sh-mode . font-lock-string-face)
+        (objc-mode . font-lock-constant-face)
+        (c-mode . font-lock-constant-face)
+        (java-mode . font-lock-constant-face)
+        (emacs-lisp-mode . font-lock-variable-name-face)
+        (org-mode . font-lock-negation-char-face)
+        (dired-mode . font-lock-function-name-face)
+        (term-mode . font-lock-doc-string-face)))
+
+    (setq ibuffer-fontification-alist
+          ;; `(,@(mapcar (lambda (b)
+          ;;               `(999 (eq major-mode ',(car b)) ,(cdr b)))
+          ;;             customary/ibuffer-fontification-alist)
+          '(
+
+            ;; (20
+            ;;  (and buffer-file-name
+            ;;       (buffer-modified-p (buffer-file-name)))
+            ;;  customary/ibuffer-common-modified-face)
+
+            (25
+             buffer-file-name
+             customary/ibuffer-common-face)
+
+            (30
+             buffer-read-only
+             customary/ibuffer-readonly-face)
+
+            (35
+             (and buffer-file-name
+                  (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
+             customary/ibuffer-compressed-file-face)
+
+            (40
+             (string-match "^*"
+                           (buffer-name))
+             customary/ibuffer-star-face)
+
+            (42
+             (or (eq major-mode 'shell-mode)
+                 (eq major-mode 'eshell-mode)
+                 (eq major-mode 'term-mode))
+             customary/ibuffer-shell-term-face
+             )
+
+            (45
+             (and
+              (string-match "^ "
+                            (buffer-name))
+              (null buffer-file-name))
+             customary/ibuffer-null-face)
+
+            (50
+             (memq major-mode ibuffer-help-buffer-modes)
+             customary/ibuffer-help-buffer-mode-face)
+
+            (55
+             (derived-mode-p
+              (quote dired-mode))
+             customary/ibuffer-dired-mode-face)))
+
+    ;; Use human readable Size column instead of original one
+    (define-ibuffer-column size-h
+      (:name "Size" :inline t)
+      (cond
+       ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+       ;; ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+       ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+       (t (format "%8d" (buffer-size)))))
+
+    ;; Modify the default ibuffer-formats
+    (setq ibuffer-formats
+          '((mark modified read-only " "
+                  (name 18 18 :left :elide)
+                  " "
+                  (size-h 9 -1 :right)
+                  " "
+                  (mode 16 16 :left :elide)
+                  " "
+                  filename-and-process)))
+    )
+  )

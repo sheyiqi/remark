@@ -69,6 +69,7 @@ values."
              colors-enable-rainbow-identifiers nil
              colors-enable-nyan-cat-progress-bar nil)
      ;; deft
+     ;; ibuffer
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
 
@@ -308,8 +309,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
           ("org-cn"   . "http://elpa.zilongshanren.com/org/")
           ("gnu-cn"   . "http://elpa.zilongshanren.com/gnu/")))
 
-  (setq tramp-ssh-controlmaster-options
-        "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
   (setq evil-shift-round nil)
   )
 
@@ -402,6 +401,12 @@ you should place your code here."
   )
 
   (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
+  ;; (evil-set-initial-state 'term-mode 'emacs)
+  ;; (evil-set-initial-state 'shell-mode 'emacs)
+  (eval-after-load 'evil-vars '(evil-set-initial-state 'term-mode 'emacs))
+  (eval-after-load 'evil-vars '(evil-set-initial-state 'shell-mode 'emacs))
+  (setq explicit-shell-file-name (executable-find "tcsh"))
+
 
   ;; tramp -------------------------------------------------------------------
   (setq password-cache-expiry nil)
@@ -422,3 +427,16 @@ you should place your code here."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values (quote ((no-byte-compile t)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
