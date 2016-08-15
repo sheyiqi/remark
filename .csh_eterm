@@ -33,22 +33,26 @@ if ( $TERM =~ eterm-color ) then
  # or by using your favorite editor
 
    foreach temp (cd pushd)
-      alias $temp "$temp \!* ; echo 'AnSiTc' $cwd_hack"
+      # alias $temp "$temp \!* ; echo 'AnSiTc' $cwd_hack"
+      alias $temp "$temp \!* ; echo '\033AnSiTc' $cwd_hack"
    end
-   alias popd 'popd ;echo "AnSiTc" $cwd'
+   #alias popd 'popd ;echo "AnSiTc" $cwd'
+   alias popd 'popd ;echo "\033AnSiTc" $cwd'
 
  # Every command that can modify the user/host/directory should be aliased
  # as follows for the tracking mechanism to work.
 
     foreach temp ( rlogin telnet rsh sh ksh csh tcsh zsh bash tcl su )
-       alias $temp "$temp \!* ; echo 'AnSiTh' $host_hack ; \
-                echo 'AnSiTu' $user_hack ;echo 'AnSiTc' $cwd_hack"
+       #alias $temp "$temp \!* ; echo 'AnSiTh' $host_hack ; \
+       #         echo 'AnSiTu' $user_hack ;echo 'AnSiTc' $cwd_hack"
+       alias $temp "$temp \!* ; echo '\033AnSiTh' $host_hack ; \
+                echo '\033AnSiTu' $user_hack ;echo '\033AnSiTc' $cwd_hack"
     end
 
  # Start up & use color ls
-    echo "AnSiTh" $host
-    echo "AnSiTu" $user
-    echo "AnSiTc" $cwd
+    echo "\033AnSiTh" $host
+    echo "\033AnSiTu" $user
+    echo "\033AnSiTc" $cwd
 
  # some housekeeping
     unset cwd_hack
