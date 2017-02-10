@@ -6,23 +6,23 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 "" let Vundle manage Vundle, Required!
-Plugin 'VundleVim/Vundle.vim'
+""Plugin 'VundleVim/Vundle.vim'
 
 "" from github.com/xxx/yyy.git
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'ctrlp.vim'
+""Plugin 'Lokaltog/vim-easymotion'
+""Plugin 'ctrlp.vim'
 "Plugin 'nerdcommenter'
 "Plugin 'fencview'
 
 "" from github.com/vim-scripts/yyy.git
-Plugin 'ShowTrailingWhitespace'
-Plugin 'Align'
+""Plugin 'ShowTrailingWhitespace'
+""Plugin 'Align'
 "Plugin 'bufexplorer.zip'
 "Plugin 'grep.vim'
 
 "" repos init by adamzhang
-Plugin 'vimcdoc'
-Plugin 'yaml.vim'
+""Plugin 'vimcdoc'
+""Plugin 'yaml.vim'
 "Plugin 'file:///home/mcrd/engineer/cadman/repos/vim/vim-jinja'
 
 "
