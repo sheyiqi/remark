@@ -3,7 +3,7 @@ set nocompatible               " be iMproved
 "=============================== vundle ================================
 filetype off                   " required!
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+""call vundle#begin()
 
 "" let Vundle manage Vundle, Required!
 ""Plugin 'VundleVim/Vundle.vim'
@@ -36,7 +36,7 @@ call vundle#begin()
 " NOTE: comments after Plugin command are not allowed..
 "------------------------------- vundle --------------------------------
 
-call vundle#end()
+""call vundle#end()
 
 " Enable filetype plugins
 filetype plugin on
